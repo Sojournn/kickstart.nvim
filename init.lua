@@ -121,6 +121,12 @@ vim.opt.clipboard = 'unnamedplus'
 -- Enable break indent
 vim.opt.breakindent = true
 
+-- Enable 4 SpaceSizing
+vim.opt.tabstop = 4
+vim.opt.softtabstop = 4
+vim.opt.shiftwidth = 4
+vim.opt.expandtab = true
+
 -- Save undo history
 vim.opt.undofile = true
 
@@ -737,6 +743,16 @@ require('lazy').setup({
         -- is found.
         javascript = { { 'prettierd', 'prettier' } },
         typescript = { { 'prettierd', 'prettier' } },
+        typescriptreact = { { 'prettierd', 'prettier' } },
+        css = { 'prettierd', 'prettier' },
+        scss = { 'prettierd', 'prettier' },
+        markdown = { 'prettierd', 'prettier' },
+        html = { 'prettierd', 'prettier' },
+        json = { 'prettierd', 'prettier' },
+        yaml = { 'prettierd', 'prettier' },
+        graphql = { 'prettierd', 'prettier' },
+        md = { 'prettierd', 'prettier' },
+        txt = { 'prettierd', 'prettier' },
       },
     },
   },
@@ -954,7 +970,7 @@ require('lazy').setup({
   --
   -- require 'kickstart.plugins.debug',
   -- require 'kickstart.plugins.indent_line',
-  require 'kickstart.plugins.lint',
+  --require 'kickstart.plugins.lint',
   -- require 'kickstart.plugins.autopairs',
   -- require 'kickstart.plugins.neo-tree',
   -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
