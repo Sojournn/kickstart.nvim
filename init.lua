@@ -245,19 +245,23 @@ require('lazy').setup({
       require('ayu').setup {
         mirage = false, -- Set to `true` to use `mirage` variant instead of `dark` for dark background.
         terminal = true, -- Set to `false` to let terminal manage its own colors.
-        overrides = {}, -- A dictionary of group names, each associated with a dictionary of parameters (`bg`, `fg`, `sp` and `style`) and colors in hex.
+        overrides = {
+          Normal = { bg = 'None' },
+          ColorColumn = { bg = 'None' },
+          SignColumn = { bg = 'None' },
+          Folded = { bg = 'None' },
+          FoldColumn = { bg = 'None' },
+          CursorLine = { bg = 'None' },
+          CursorColumn = { bg = 'None' },
+          WhichKeyFloat = { bg = 'None' },
+          VertSplit = { bg = 'None' },
+        }, -- A dictionary of group names, each associated with a dictionary of parameters (`bg`, `fg`, `sp` and `style`) and colors in hex.
       }
     end,
   },
   {
     'tpope/vim-fugitive',
     vim.keymap.set('n', '<leader>gs', vim.cmd.Git),
-  },
-  {
-    'nvim-tree/nvim-tree.lua',
-    config = function()
-      require('nvim-tree').setup()
-    end,
   },
   {
     'ThePrimeagen/harpoon',
@@ -315,6 +319,41 @@ require('lazy').setup({
       require('startup').setup()
     end,
   },
+  ---@type LazySpec
+  {
+    'mikavilpas/yazi.nvim',
+    event = 'VeryLazy',
+    keys = {
+      -- 👇 in this section, choose your own keymappings!
+      {
+        '<leader>-',
+        '<cmd>Yazi<cr>',
+        desc = 'Open yazi at the current file',
+      },
+      {
+        -- Open in the current working directory
+        '<leader>cw',
+        '<cmd>Yazi cwd<cr>',
+        desc = "Open the file manager in nvim's working directory",
+      },
+      {
+        -- NOTE: this requires a version of yazi that includes
+        -- https://github.com/sxyazi/yazi/pull/1305 from 2024-07-18
+        '<c-up>',
+        '<cmd>Yazi toggle<cr>',
+        desc = 'Resume the last yazi session',
+      },
+    },
+    ---@type YaziConfig
+    opts = {
+      -- if you want to open yazi instead of netrw, see below for more info
+      open_for_directories = false,
+      keymaps = {
+        show_help = '<f1>',
+      },
+    },
+  },
+
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
   -- keys can be used to configure plugin behavior/loading/etc.
