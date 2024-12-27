@@ -240,23 +240,12 @@ require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
   {
-    'Shatur/neovim-ayu',
-    config = function()
-      require('ayu').setup {
-        mirage = false, -- Set to `true` to use `mirage` variant instead of `dark` for dark background.
-        terminal = true, -- Set to `false` to let terminal manage its own colors.
-        overrides = {
-          Normal = { bg = 'None' },
-          ColorColumn = { bg = 'None' },
-          SignColumn = { bg = 'None' },
-          Folded = { bg = 'None' },
-          FoldColumn = { bg = 'None' },
-          CursorLine = { bg = 'None' },
-          CursorColumn = { bg = 'None' },
-          WhichKeyFloat = { bg = 'None' },
-          VertSplit = { bg = 'None' },
-        }, -- A dictionary of group names, each associated with a dictionary of parameters (`bg`, `fg`, `sp` and `style`) and colors in hex.
-      }
+    'catppuccin/nvim',
+    name = 'catppuccin',
+    priority = 1000,
+    init = function()
+      vim.cmd.colorscheme 'catppuccin-macchiato'
+      vim.cmd.hi 'Comment gui=none'
     end,
   },
   {
@@ -307,8 +296,61 @@ require('lazy').setup({
     'nvim-lualine/lualine.nvim',
     dependencies = { 'nvim-tree/nvim-web-devicons' },
     config = function()
+      local colors = {
+        blue = '#8aadf4',
+        cyan = '#7dc4e4',
+        black = '#181926',
+        white = '#cad3f5',
+        red = '#ed8796',
+        violet = '#c6a0f6',
+        grey = '#494d64',
+      }
+
+      local bubbles_theme = {
+        normal = {
+          a = { fg = colors.black, bg = colors.violet },
+          b = { fg = colors.white, bg = colors.grey },
+          c = { fg = colors.white },
+        },
+
+        insert = { a = { fg = colors.black, bg = colors.blue } },
+        visual = { a = { fg = colors.black, bg = colors.cyan } },
+        replace = { a = { fg = colors.black, bg = colors.red } },
+
+        inactive = {
+          a = { fg = colors.white, bg = colors.black },
+          b = { fg = colors.white, bg = colors.black },
+          c = { fg = colors.white },
+        },
+      }
       require('lualine').setup {
-        options = { theme = 'ayu_dark' },
+        options = {
+          theme = bubbles_theme,
+          component_separators = '',
+          section_separators = { left = '', right = '' },
+        },
+        sections = {
+          lualine_a = { { 'mode', separator = { left = '' }, right_padding = 2 } },
+          lualine_b = { 'filename', 'branch' },
+          lualine_c = {
+            '%=', --[[ add your center compoentnts here in place of this comment ]]
+          },
+          lualine_x = {},
+          lualine_y = { 'filetype', 'progress' },
+          lualine_z = {
+            { 'location', separator = { right = '' }, left_padding = 2 },
+          },
+        },
+        inactive_sections = {
+          lualine_a = { 'filename' },
+          lualine_b = {},
+          lualine_c = {},
+          lualine_x = {},
+          lualine_y = {},
+          lualine_z = { 'location' },
+        },
+        tabline = {},
+        extensions = {},
       }
     end,
   },
@@ -707,6 +749,47 @@ require('lazy').setup({
         -- But for many setups, the LSP (`tsserver`) will work just fine
         -- tsserver = {},
         --
+        omnisharp = {
+          cmd = { 'dotnet', '/Users/collin.nigro/.local/share/nvim/mason/packages/omnisharp/libexec/OmniSharp.dll' },
+          settings = {
+            FormattingOptions = {
+              -- Enables support for reading code style, naming convention and analyzer
+              -- settings from .editorconfig.
+              EnableEditorConfigSupport = true,
+              -- Specifies whether 'using' directives should be grouped and sorted during
+              -- document formatting.
+              OrganizeImports = true,
+            },
+            MsBuild = {
+              -- If true, MSBuild project system will only load projects for files that
+              -- were opened in the editor. This setting is useful for big C# codebases
+              -- and allows for faster initialization of code navigation features only
+              -- for projects that are relevant to code that is being edited. With this
+              -- setting enabled OmniSharp may load fewer projects and may thus display
+              -- incomplete reference lists for symbols.
+              LoadProjectsOnDemand = nil,
+            },
+            RoslynExtensionsOptions = {
+              -- Enables support for roslyn analyzers, code fixes and rulesets.
+              EnableAnalyzersSupport = nil,
+              -- Enables support for showing unimported types and unimported extension
+              -- methods in completion lists. When committed, the appropriate using
+              -- directive will be added at the top of the current file. This option can
+              -- have a negative impact on initial completion responsiveness,
+              -- particularly for the first few completion sessions after opening a
+              -- solution.
+              EnableImportCompletion = nil,
+              -- Only run analyzers against open files when 'enableRoslynAnalyzers' is
+              -- true
+              AnalyzeOpenDocumentsOnly = nil,
+            },
+            Sdk = {
+              -- Specifies whether to include preview versions of the .NET SDK when
+              -- determining which version to use for project loading.
+              IncludePrereleases = true,
+            },
+          },
+        },
 
         lua_ls = {
           -- cmd = {...},
@@ -913,25 +996,6 @@ require('lazy').setup({
       }
     end,
   },
-
-  { -- You can easily change to a different colorscheme.
-    -- Change the name of the colorscheme plugin below, and then
-    -- change the command in the config to whatever the name of that colorscheme is.
-    --
-    -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-    'folke/tokyonight.nvim',
-    priority = 1000, -- Make sure to load this before all the other start plugins.
-    init = function()
-      -- Load the colorscheme here.
-      -- Like many other themes, this one has different styles, and you could load
-      -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'ayu'
-
-      -- You can configure highlights by doing something like:
-      vim.cmd.hi 'Comment gui=none'
-    end,
-  },
-
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
 
