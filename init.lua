@@ -835,6 +835,7 @@ require('lazy').setup({
         graphql = { 'prettierd', 'prettier' },
         md = { 'prettierd', 'prettier' },
         txt = { 'prettierd', 'prettier' },
+        go = { 'prettierd', 'prettier' },
       },
     },
   },
