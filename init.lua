@@ -163,6 +163,9 @@ vim.opt.cursorline = true
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 10
 
+-- Automatically read file when changed outside of Neovim
+vim.opt.autoread = true
+
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
@@ -213,6 +216,26 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   group = vim.api.nvim_create_augroup('kickstart-highlight-yank', { clear = true }),
   callback = function()
     vim.highlight.on_yank()
+  end,
+})
+
+-- Auto-reload files when modified externally (e.g., by a coding agent)
+vim.api.nvim_create_autocmd({ 'FocusGained', 'BufEnter', 'CursorHold', 'CursorHoldI' }, {
+  desc = 'Reload file when changed externally',
+  group = vim.api.nvim_create_augroup('kickstart-checktime', { clear = true }),
+  callback = function()
+    if vim.fn.getcmdwintype() == '' then
+      vim.cmd 'checktime'
+    end
+  end,
+})
+
+-- Notify when file is reloaded from disk
+vim.api.nvim_create_autocmd('FileChangedShellPost', {
+  desc = 'Notify when file is reloaded',
+  group = vim.api.nvim_create_augroup('kickstart-file-changed-notify', { clear = true }),
+  callback = function()
+    vim.notify('File changed on disk. Buffer reloaded.', vim.log.levels.WARN)
   end,
 })
 
